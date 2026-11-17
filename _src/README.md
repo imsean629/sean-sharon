@@ -7,6 +7,7 @@
 | survey | 학원생 설문(학업·진로·AI), 초/중/고 분기 | /survey/ · 집계판 /survey/#board |
 | balance | 오늘의 밸런스 게임 (Sean ♥ Sharon 전용, 커플 코드) | /balance/ (시작 페이지에 링크 안 함, noindex) |
 | poker | 오늘의 쇼다운 (커플 1:1 드로우 포커, 하루 3판, 월 시즌) | /poker/ (링크 안 함, noindex) |
+| chips | 칩 테이블 (실물 카드 + 디지털 칩, 태블릿=팟, 폰=내 칩) | /chips/ (링크 안 함, noindex) |
 | apps_script_Code.gs | 모든 콘텐츠 공용 Apps Script (kind별 탭) | |
 | gs_test/run.js | 가짜 Sheets로 Apps Script 검증 (`node run.js`) | |
 
@@ -42,3 +43,11 @@ cd /home/claude/work/survey && python3 build.py "<웹앱 URL>" && python3 test.p
 - 시즌 = 달(KST). 각자 100칩에서 시작, 칩 = 100 ± 그달 합계.
 - 이름·코드는 밸런스 게임과 같은 localStorage(bal_me, bal_code)를 공유.
 - `node engine_test.js` 로 족보·정산 단위 테스트.
+
+## 칩 테이블 메모
+- 구글 시트 안 씀. PeerJS(WebRTC, 공용 시그널링 0.peerjs.com)로 기기끼리 직접 연결. 태블릿 피어 ID = 'sean-sharon-chiptable-v1-<코드>-table', 폰은 같은 코드로 접속.
+- 태블릿이 상태의 주인(localStorage 'chip_state_<코드>'에 저장 → 새로고침해도 유지). 폰은 bet/check/fold만 보냄.
+- 칩 10/50/100/500, 시작 1,000, 블라인드 10/20 (헤즈업: 딜러=SB). 되돌리기 40단계.
+- 폰 연결이 안 되면 설정의 「태블릿에서 직접 칩 놓기」(위 자리는 180° 회전).
+- 테스트: `cd node && npm i peer peerjs && node peerserver.js` (127.0.0.1:9000) + out/에서 http.server 8765 + `python3 test.py` (주소에 ?peerhost=127.0.0.1&peerport=9000).
+- 바로 열기 주소: /chips/?as=table · ?as=Sean · ?as=Sharon (코드는 저장된 값 사용, &code=0000으로 지정 가능)

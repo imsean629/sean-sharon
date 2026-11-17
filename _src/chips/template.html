@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>칩 테이블 — Sean ♥ Sharon</title>
+<meta name="robots" content="noindex">
+<meta property="og:title" content="칩 테이블 🪙">
+<meta property="og:description" content="카드는 실물로, 칩은 휴대폰으로. 위로 밀어서 베팅!">
+<meta property="og:url" content="__URL__">
+<meta property="og:image" content="__URL__og.png">
+<meta name="theme-color" content="#1F4D40">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;700;900&display=swap">
+<style>
+:root{--felt:#2E6B58;--feltD:#1F4D40;--gold:#F2CF5B;--ink:#3B3551;--sean:#7FB5FF;--sharon:#FF9CB5;
+  --c10:#F4F1EA;--c50:#E0475E;--c100:#3B7DD8;--c500:#2B2B33}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+html,body{margin:0;height:100%;background:var(--feltD);color:#FFFFFF;font-family:'Noto Sans KR','Apple SD Gothic Neo',sans-serif;-webkit-font-smoothing:antialiased;overflow:hidden;overscroll-behavior:none}
+button,input{font-family:inherit}
+[hidden]{display:none!important}
+.jua{font-family:'Jua','Noto Sans KR',sans-serif;font-weight:400}
+.felt{position:fixed;inset:0;background:radial-gradient(ellipse at 50% 45%,#3A8069 0%,var(--felt) 55%,var(--feltD) 100%)}
+.screen{position:fixed;inset:0;display:none;flex-direction:column}
+.screen.on{display:flex}
+.btn{border:0;border-radius:14px;min-height:48px;padding:0 14px;font-size:15px;font-weight:900;cursor:pointer;background:rgba(255,255,255,.92);color:var(--ink)}
+.btn.gold{background:var(--gold);color:#3B2E00;box-shadow:0 4px 0 #C9A73A}
+.btn.ghost{background:transparent;border:2px solid rgba(255,255,255,.55);color:#FFFFFF}
+.btn[disabled]{opacity:.4;cursor:default}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#E0475E;margin-right:5px;vertical-align:1px}
+.dot.on{background:#5BE08E}
+
+/* ---------- 시작 ---------- */
+#s-home{align-items:center;justify-content:center;padding:24px;text-align:center}
+#s-home h1{margin:0;font-size:44px;line-height:1.15}
+#s-home h1 em{font-style:normal;color:var(--gold)}
+#s-home p{opacity:.85;line-height:1.6;margin:10px 0 22px}
+.card{background:rgba(255,255,255,.96);color:var(--ink);border-radius:22px;padding:18px;width:100%;max-width:380px;text-align:left}
+.card h3{margin:0 0 8px;font-size:14px}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.seg button{min-height:58px;border:2px solid #EADDE3;border-radius:14px;background:#FFFFFF;font-size:16px;font-weight:900;color:var(--ink);cursor:pointer}
+.seg button.sel{border-color:var(--felt);background:#E8F4EF;color:var(--felt)}
+.code{width:100%;height:54px;border:2px solid #EADDE3;border-radius:14px;text-align:center;font-size:26px;letter-spacing:12px;font-weight:900;color:var(--ink);margin-bottom:6px}
+.small{font-size:12.5px;color:#7A7290;line-height:1.5;margin:6px 0 0}
+
+/* ---------- 칩 ---------- */
+.chip{--c:var(--c10);--e:#B7AE9C;width:58px;height:58px;border-radius:50%;position:relative;
+  background:radial-gradient(circle,var(--c) 0 46%,transparent 47%),repeating-conic-gradient(var(--c) 0 20deg,#FFFFFF 20deg 40deg);
+  box-shadow:0 0 0 3px var(--c),0 4px 0 rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;color:#3B3551}
+.chip::after{content:'';position:absolute;inset:9px;border-radius:50%;border:2px dashed rgba(255,255,255,.7)}
+.chip span{position:relative;z-index:1}
+.chip.d50{--c:var(--c50);color:#FFFFFF}.chip.d100{--c:var(--c100);color:#FFFFFF}.chip.d500{--c:var(--c500);color:var(--gold)}
+.chip.d10::after{border-color:rgba(59,53,81,.35)}
+.slice{position:absolute;width:56px;height:13px;border-radius:50%;left:0;
+  background:repeating-linear-gradient(90deg,var(--c) 0 7px,#FFFFFF 7px 10px);box-shadow:0 2px 0 rgba(0,0,0,.35),inset 0 -2px 0 rgba(0,0,0,.18)}
+.slice.d10{--c:#E9E4D8;background:repeating-linear-gradient(90deg,#EFEADF 0 7px,#9C927C 7px 10px)}.slice.d50{--c:var(--c50)}.slice.d100{--c:var(--c100)}.slice.d500{--c:var(--c500);background:repeating-linear-gradient(90deg,#2B2B33 0 7px,var(--gold) 7px 10px)}
+.pile{position:relative;display:flex;align-items:flex-end;justify-content:center;gap:6px}
+.stack{position:relative;width:56px}
+
+/* ---------- 휴대폰 ---------- */
+#s-phone{padding:max(14px,env(safe-area-inset-top)) 14px max(14px,env(safe-area-inset-bottom))}
+.ph-top{display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:700}
+.ph-top .me{font-size:20px}
+.ph-top .me.Sean{color:var(--sean)}.ph-top .me.Sharon{color:var(--sharon)}
+.ph-opp{margin-top:6px;display:flex;justify-content:space-between;font-size:13px;opacity:.9;background:rgba(0,0,0,.18);border-radius:12px;padding:8px 12px}
+.ph-stack{margin-top:10px;text-align:center}
+.ph-stack small{display:block;font-size:12px;opacity:.8;font-weight:700}
+.ph-stack b{font-size:52px;line-height:1.05;color:var(--gold)}
+.ph-info{display:flex;justify-content:center;gap:10px;margin-top:4px;font-size:14px;font-weight:900}
+.ph-info span{background:rgba(0,0,0,.22);border-radius:999px;padding:5px 12px}
+.tray{position:relative;flex:1;min-height:170px;margin-top:10px;border-radius:24px;border:2px dashed rgba(255,255,255,.35);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:16px;touch-action:none;overflow:visible}
+.tray .amt{font-size:30px;color:var(--gold);margin-top:8px;min-height:36px}
+.tray .guide{position:absolute;top:14px;left:0;right:0;text-align:center;font-size:13.5px;font-weight:700;opacity:.85}
+.tray .guide i{display:block;font-style:normal;font-size:22px;animation:bob 1.2s infinite}
+@keyframes bob{50%{transform:translateY(-6px)}}
+.tray .pile{min-height:40px}
+.tray.ready{border-color:var(--gold);background:rgba(242,207,91,.08)}
+.rack{margin-top:12px;display:grid;grid-template-columns:repeat(4,1fr);justify-items:center}
+.rack button{border:0;background:none;padding:0;cursor:pointer}
+.rack button[disabled]{opacity:.3}
+.rack button:active .chip{transform:translateY(2px)}
+.quick{margin-top:12px;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.quick .btn{min-height:46px;font-size:14px;padding:0 4px}
+.toast{position:fixed;left:50%;top:44%;transform:translateX(-50%);background:rgba(0,0,0,.72);padding:10px 18px;border-radius:999px;font-weight:900;font-size:15px;pointer-events:none;opacity:0;transition:opacity .25s;z-index:50;white-space:nowrap}
+.toast.on{opacity:1}
+.fly{position:fixed;z-index:40;pointer-events:none}
+.ph-wait{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;opacity:.9;gap:8px}
+
+/* ---------- 태블릿 ---------- */
+#s-table{padding:10px}
+.seat{flex:0 0 auto;display:flex;align-items:center;gap:12px;background:rgba(0,0,0,.18);border-radius:22px;padding:10px 14px;position:relative}
+.seat.top{transform:rotate(180deg)}
+.seat .nm{font-size:26px}
+.seat.Sean .nm{color:var(--sean)}.seat.Sharon .nm{color:var(--sharon)}
+.seat .stk{font-size:30px;color:var(--gold)}
+.seat .sub{font-size:13px;font-weight:700;opacity:.85}
+.seat .bet{margin-left:auto;text-align:right}
+.seat .bet b{display:block;font-size:22px}
+.seat .dbtn{width:34px;height:34px;border-radius:50%;background:#FFFFFF;color:var(--ink);font-weight:900;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 3px 0 rgba(0,0,0,.3)}
+.seat .lr{display:flex;flex-direction:column}
+.local{flex:0 0 auto;margin-top:8px}
+.local.top{transform:rotate(180deg)}
+.local .mini{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+.local .rack{margin-top:0;gap:4px}
+.local .tray{min-height:96px;margin-top:0}
+.local .quick{margin-top:8px}
+.center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;min-height:200px}
+.potlbl{font-size:15px;font-weight:900;opacity:.85}
+.pot{font-size:56px;color:var(--gold);line-height:1}
+.potpile{min-height:120px;display:flex;align-items:flex-end;margin:22px 0 26px;transform:scale(1.6);transform-origin:50% 100%}
+.meta{font-size:13px;font-weight:700;opacity:.8;margin-bottom:10px}
+.ctrl{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;width:100%;max-width:520px}
+.ctrl2{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:100%;max-width:520px;margin-top:8px}
+.btn.win.Sean{background:var(--sean);color:#10305C}.btn.win.Sharon{background:var(--sharon);color:#5C1027}
+.conn{position:absolute;top:0;right:0;font-size:12px;font-weight:700;opacity:.9;text-align:right;line-height:1.6}
+.banner{position:absolute;left:50%;top:14%;transform:translate(-50%,-50%) scale(.8);background:rgba(0,0,0,.75);border-radius:22px;padding:16px 26px;font-size:30px;opacity:0;transition:.3s;pointer-events:none;white-space:nowrap;z-index:30}
+.banner.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.sheet{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:60;padding:16px}
+.sheet .card{max-width:420px}
+.sheet label{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:10px 0;font-size:14px;font-weight:700}
+.sheet input[type=number]{width:110px;height:42px;border:2px solid #EADDE3;border-radius:10px;font-size:16px;text-align:right;padding:0 8px;color:var(--ink)}
+.sheet .row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.qr{display:flex;align-items:center;gap:10px;margin-top:10px;font-size:12.5px;color:#7A7290}
+.qr img{width:96px;height:96px}
+</style>
+</head>
+<body>
+<div class="felt"></div>
+
+<!-- 시작 -->
+<section class="screen on" id="s-home">
+  <h1 class="jua">칩 <em>테이블</em> 🪙</h1>
+  <p>카드는 실물로, 칩은 휴대폰으로.<br>태블릿은 가운데 팟이 돼요.</p>
+  <div class="card">
+    <h3>이 기기는</h3>
+    <div class="seg" id="role"><button data-r="table">테이블 (태블릿)</button><button data-r="player">내 칩 (휴대폰)</button></div>
+    <div id="who-wrap" hidden><h3>나는</h3><div class="seg" id="who"><button data-w="Sean">Sean</button><button data-w="Sharon">Sharon</button></div></div>
+    <h3>커플 코드 (숫자 4자리)</h3>
+    <input class="code" id="code" inputmode="numeric" maxlength="4" placeholder="····">
+    <p class="small">태블릿과 두 휴대폰에 같은 코드를 넣으면 연결돼요. 밸런스 게임·쇼다운에서 쓰던 코드가 있으면 자동으로 채워져요.</p>
+    <button class="btn gold" id="go" style="width:100%;margin-top:14px" disabled>시작</button>
+  </div>
+</section>
+
+<!-- 휴대폰 -->
+<section class="screen" id="s-phone">
+  <div class="ph-top"><span class="me jua" id="p-me"></span><span id="p-conn"><span class="dot"></span>연결 중…</span></div>
+  <div id="p-wait" class="ph-wait"><div class="jua" style="font-size:24px">테이블을 찾는 중…</div><div style="font-size:13px">태블릿에서 「테이블」로 같은 코드를 열어 주세요</div></div>
+  <div id="p-main" hidden style="display:flex;flex-direction:column;flex:1">
+    <div class="ph-opp"><span id="p-opp"></span><span id="p-oppbet"></span></div>
+    <div class="ph-stack"><small>내 칩</small><b class="jua" id="p-stack">0</b></div>
+    <div class="ph-info"><span id="p-pot">팟 0</span><span id="p-call">콜 0</span></div>
+    <div id="p-play"></div>
+  </div>
+</section>
+
+<!-- 태블릿 -->
+<section class="screen" id="s-table">
+  <div class="seat top" id="seat-top"></div>
+  <div class="local top" id="local-top" hidden></div>
+  <div class="center">
+    <div class="conn" id="t-conn"></div>
+    <div class="potlbl">POT</div>
+    <div class="pot jua" id="t-pot">0</div>
+    <div class="potpile pile" id="t-pile"></div>
+    <div class="meta" id="t-meta"></div>
+    <div class="ctrl">
+      <button class="btn win" id="w-a"></button>
+      <button class="btn" id="w-split">찹 (반반)</button>
+      <button class="btn win" id="w-b"></button>
+    </div>
+    <div class="ctrl2">
+      <button class="btn ghost" id="t-street">다음 카드</button>
+      <button class="btn gold" id="t-new">새 핸드</button>
+      <button class="btn ghost" id="t-undo">되돌리기</button>
+      <button class="btn ghost" id="t-set">설정</button>
+    </div>
+    <div class="banner jua" id="t-banner"></div>
+  </div>
+  <div class="local" id="local-bot" hidden></div>
+  <div class="seat" id="seat-bot"></div>
+</section>
+
+<div class="sheet" id="sheet" hidden>
+  <div class="card">
+    <h3 style="font-size:17px">테이블 설정</h3>
+    <label>시작 칩 (1인)<input type="number" id="o-start" step="10" min="10"></label>
+    <label>스몰 / 빅 블라인드<span><input type="number" id="o-sb" step="5" min="0" style="width:70px"> / <input type="number" id="o-bb" step="5" min="0" style="width:70px"></span></label>
+    <label>새 핸드에 블라인드 자동<input type="checkbox" id="o-blind" style="width:22px;height:22px"></label>
+    <label>아래쪽 자리<span class="seg" style="margin:0;grid-template-columns:auto auto" id="o-bot"><button data-w="Sean" style="min-height:40px;padding:0 12px">Sean</button><button data-w="Sharon" style="min-height:40px;padding:0 12px">Sharon</button></span></label>
+    <label>태블릿에서 직접 칩 놓기<input type="checkbox" id="o-local" style="width:22px;height:22px"></label>
+    <p class="small">휴대폰 연결이 안 되면 켜세요. 태블릿 위·아래에 각자 칩 받침이 생겨요.</p>
+    <div class="qr"><img src="__QR__" alt="QR"><span>휴대폰으로 찍으면 이 페이지가 열려요.<br>「내 칩」을 고르고 같은 코드를 넣어요.</span></div>
+    <div class="row"><button class="btn" id="o-reset" style="background:#FFE3EA;color:#B5304F">칩 전체 초기화</button><button class="btn gold" id="o-ok">닫기</button></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>/*__PEER__*/</script>
+<script>
+(function(){
+  var URLP = new URLSearchParams(location.search);
+  var PEER_OPTS = { debug: 0 };
+  if (URLP.get('peerhost')) PEER_OPTS = { host: URLP.get('peerhost'), port: +URLP.get('peerport'), path: '/', secure: false, debug: 0, config: { iceServers: [] } };
+  var PREFIX = 'sean-sharon-chiptable-v1-';
+  var DEN = [10, 50, 100, 500], NAMES = ['Sean', 'Sharon'];
+  var $ = function(id){ return document.getElementById(id); };
+  function el(t, c, x){ var e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; }
+  function store(k, v){ try { if (v === undefined) return localStorage.getItem(k); if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) { return null; } }
+  function fmt(n){ return Number(n).toLocaleString('ko-KR'); }
+  function other(w){ return w === 'Sean' ? 'Sharon' : 'Sean'; }
+  function show(id){ ['s-home', 's-phone', 's-table'].forEach(function(s){ $(s).classList.toggle('on', s === id); }); }
+  var tt; function toast(t){ var e = $('toast'); e.textContent = t; e.classList.add('on'); clearTimeout(tt); tt = setTimeout(function(){ e.classList.remove('on'); }, 1800); }
+  function buzz(ms){ try { navigator.vibrate && navigator.vibrate(ms); } catch (e) {} }
+
+  // ---------- 소리 (칩 부딪히는 소리 합성) ----------
+  var AC = null;
+  function clack(n, gap){
+    try {
+      AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+      for (var i = 0; i < (n || 1); i++) (function(i){
+        var t = AC.currentTime + i * (gap || 0.05) + Math.random() * 0.02, len = 0.05;
+        var buf = AC.createBuffer(1, AC.sampleRate * len, AC.sampleRate), d = buf.getChannelData(0);
+        for (var j = 0; j < d.length; j++) d[j] = (Math.random() * 2 - 1) * Math.pow(1 - j / d.length, 6);
+        var src = AC.createBufferSource(), f = AC.createBiquadFilter(), g = AC.createGain();
+        src.buffer = buf; f.type = 'bandpass'; f.frequency.value = 2600 + Math.random() * 1600; f.Q.value = 3; g.gain.value = 0.9;
+        src.connect(f); f.connect(g); g.connect(AC.destination); src.start(t);
+      })(i);
+    } catch (e) {}
+  }
+  document.addEventListener('pointerdown', function(){ try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); if (AC.state === 'suspended') AC.resume(); } catch (e) {} }, { once: true });
+
+  // ---------- 칩 그림 ----------
+  function breakdown(n){ var out = {}; for (var i = DEN.length - 1; i >= 0; i--) { var k = Math.floor(n / DEN[i]); if (k) { out[DEN[i]] = k; n -= k * DEN[i]; } } if (n > 0) out[10] = (out[10] || 0) + 1; return out; }
+  function chipEl(d){ var c = el('div', 'chip d' + d); c.appendChild(el('span', null, d)); return c; }
+  function pileEl(n, maxPer){
+    var p = el('div', 'pile'), b = breakdown(n);
+    DEN.slice().reverse().forEach(function(d){
+      var k = b[d]; if (!k) return;
+      var shown = Math.min(k, maxPer || 14), st = el('div', 'stack'); st.style.height = (13 + shown * 6) + 'px';
+      for (var i = 0; i < shown; i++) { var s = el('div', 'slice d' + d); s.style.bottom = (i * 6) + 'px'; s.style.left = ((i * 7) % 3 - 1) + 'px'; st.appendChild(s); }
+      p.appendChild(st);
+    });
+    return p;
+  }
+  // 칩 날리기 (from/to: 화면 좌표)
+  function flyChips(n, from, to, opt){
+    opt = opt || {}; var b = breakdown(n), list = [];
+    DEN.slice().reverse().forEach(function(d){ for (var i = 0; i < (b[d] || 0); i++) list.push(d); });
+    list = list.slice(0, opt.max || 10);
+    list.forEach(function(d, i){
+      var c = chipEl(d); c.classList.add('fly'); c.style.left = (from.x - 29) + 'px'; c.style.top = (from.y - 29) + 'px'; document.body.appendChild(c);
+      var dx = to.x - from.x + (Math.random() * 70 - 35), dy = to.y - from.y + (Math.random() * 30 - 15), rot = Math.random() * 540 - 270;
+      var a = c.animate([
+        { transform: 'translate(0,0) rotate(0) scale(1)', opacity: 1 },
+        { transform: 'translate(' + dx * 0.6 + 'px,' + (dy * 0.6 - (opt.arc || 60)) + 'px) rotate(' + rot * 0.6 + 'deg) scale(' + (opt.scale || 1) + ')', opacity: 1, offset: 0.6 },
+        { transform: 'translate(' + dx + 'px,' + dy + 'px) rotate(' + rot + 'deg) scale(' + (opt.endScale || 0.7) + ') rotateX(70deg)', opacity: opt.fade ? 0 : 1 }
+      ], { duration: (opt.dur || 650) + i * 20, delay: i * (opt.stagger || 55), easing: 'cubic-bezier(.3,.7,.4,1)', fill: 'forwards' });
+      a.onfinish = function(){ c.remove(); if (i === list.length - 1 && opt.done) opt.done(); };
+    });
+    if (!list.length && opt.done) opt.done();
+    clack(Math.min(list.length, 8), 0.06);
+  }
+  function center(e){ var r = e.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; }
+
+  // ---------- 시작 화면 ----------
+  var role = null, me = store('bal_me'), code = store('bal_code') || '';
+  $('code').value = code;
+  function seg(id, attr, cb){ Array.prototype.forEach.call($(id).querySelectorAll('button'), function(b){ b.addEventListener('click', function(){ Array.prototype.forEach.call($(id).querySelectorAll('button'), function(x){ x.classList.toggle('sel', x === b); }); cb(b.dataset[attr]); chk(); }); }); }
+  seg('role', 'r', function(r){ role = r; $('who-wrap').hidden = r !== 'player'; });
+  seg('who', 'w', function(w){ me = w; });
+  if (me) Array.prototype.forEach.call($('who').querySelectorAll('button'), function(b){ b.classList.toggle('sel', b.dataset.w === me); });
+  $('code').addEventListener('input', function(){ this.value = this.value.replace(/\D/g, '').slice(0, 4); chk(); });
+  function chk(){ $('go').disabled = !(role && /^\d{4}$/.test($('code').value) && (role === 'table' || me)); }
+  $('go').addEventListener('click', function(){
+    code = $('code').value; store('bal_code', code);
+    if (role === 'player') { store('bal_me', me); startPhone(); } else startTable();
+  });
+
+  // =====================================================
+  //  테이블 (태블릿) — 상태의 주인
+  // =====================================================
+  var S = null, HIST = [], conns = { Sean: null, Sharon: null }, hostPeer = null;
+  function fresh(start){ return { v: 1, hand: 0, dealer: 'Sharon', start: start || 1000, sb: 10, bb: 20, blinds: true, bottom: 'Sean', local: false,
+    p: { Sean: { stack: start || 1000, street: 0 }, Sharon: { stack: start || 1000, street: 0 } }, pot: 0, last: null }; }
+  function saveS(){ store('chip_state_' + code, JSON.stringify(S)); }
+  function snap(){ HIST.push(JSON.stringify(S)); if (HIST.length > 40) HIST.shift(); }
+
+  function act(a, from){ // 모든 칩 이동은 여기서만
+    var ev = null, w = a.who;
+    if (a.t === 'bet') {
+      var p = S.p[w], amt = Math.max(0, Math.min(Math.floor(a.amt), p.stack)); if (!amt) return;
+      snap(); p.stack -= amt; p.street += amt; S.pot += amt;
+      ev = { type: 'bet', who: w, amt: amt, allin: p.stack === 0 };
+    } else if (a.t === 'check') { ev = { type: 'check', who: w }; }
+    else if (a.t === 'fold') { if (!S.pot) { ev = { type: 'fold', who: w, amt: 0 }; } else { snap(); ev = award(other(w)); ev.fold = w; } }
+    else if (a.t === 'win') { if (!S.pot) return; snap(); ev = award(w); }
+    else if (a.t === 'split') { if (!S.pot) return; snap(); var h = Math.floor(S.pot / 2), r = S.pot - h * 2, nd = other(S.dealer);
+      S.p.Sean.stack += h + (nd === 'Sean' ? r : 0); S.p.Sharon.stack += h + (nd === 'Sharon' ? r : 0); ev = { type: 'split', amt: S.pot }; S.pot = 0; resetStreet(); }
+    else if (a.t === 'street') { snap(); resetStreet(); ev = { type: 'street' }; }
+    else if (a.t === 'new') {
+      if (S.pot) { toast('먼저 팟의 주인을 정해 주세요'); return; }
+      snap(); S.hand++; S.dealer = other(S.dealer); resetStreet();
+      ev = { type: 'new', hand: S.hand };
+      if (S.blinds) { var sbw = S.dealer, bbw = other(S.dealer); // 헤즈업: 딜러가 스몰
+        var a1 = Math.min(S.sb, S.p[sbw].stack), a2 = Math.min(S.bb, S.p[bbw].stack);
+        S.p[sbw].stack -= a1; S.p[sbw].street += a1; S.p[bbw].stack -= a2; S.p[bbw].street += a2; S.pot += a1 + a2;
+        ev.blinds = [[sbw, a1], [bbw, a2]]; }
+    }
+    else if (a.t === 'undo') { if (!HIST.length) { toast('되돌릴 게 없어요'); return; } S = JSON.parse(HIST.pop()); ev = { type: 'undo' }; }
+    else if (a.t === 'reset') { snap(); var keep = { bottom: S.bottom, local: S.local, sb: S.sb, bb: S.bb, blinds: S.blinds }; S = fresh(a.start); for (var k in keep) S[k] = keep[k]; ev = { type: 'reset' }; }
+    else if (a.t === 'opts') { for (var k2 in a.o) S[k2] = a.o[k2]; ev = { type: 'opts' }; }
+    if (!ev) return;
+    S.last = ev; saveS(); renderTable(ev); broadcast(ev);
+  }
+  function resetStreet(){ S.p.Sean.street = 0; S.p.Sharon.street = 0; }
+  function award(w){ var amt = S.pot; S.p[w].stack += amt; S.pot = 0; resetStreet(); return { type: 'win', who: w, amt: amt }; }
+  function pub(){ return { hand: S.hand, dealer: S.dealer, pot: S.pot, p: S.p, sb: S.sb, bb: S.bb }; }
+  function broadcast(ev){ NAMES.forEach(function(w){ var c = conns[w]; if (c && c.open) try { c.send({ t: 'state', s: pub(), ev: ev }); } catch (e) {} }); }
+
+  function startTable(){
+    role = 'table'; show('s-table'); document.title = '칩 테이블 · 테이블';
+    try { S = JSON.parse(store('chip_state_' + code) || 'null'); } catch (e) { S = null; }
+    if (!S || S.v !== 1) S = fresh(1000);
+    renderTable(null); hostOpen();
+    try { navigator.wakeLock && navigator.wakeLock.request('screen').catch(function(){}); } catch (e) {}
+  }
+  var hostTries = 0;
+  function hostOpen(){
+    if (typeof Peer === 'undefined') { connInfo('연결 라이브러리를 못 불러왔어요 · 설정에서 「태블릿에서 직접」을 켜세요'); return; }
+    hostPeer = new Peer(PREFIX + code + '-table', PEER_OPTS);
+    hostPeer.on('open', function(){ hostTries = 0; connInfo(); });
+    hostPeer.on('connection', function(c){
+      c.on('data', function(m){
+        if (!m || !m.t) return;
+        if (m.t === 'hello' && NAMES.indexOf(m.who) >= 0) {
+          if (conns[m.who] && conns[m.who] !== c) try { conns[m.who].close(); } catch (e) {}
+          conns[m.who] = c; c.who = m.who; connInfo(); c.send({ t: 'state', s: pub(), ev: { type: 'hello' } }); toast(m.who + ' 휴대폰 연결됨');
+          return;
+        }
+        if (!c.who) return;
+        if (m.t === 'bet') act({ t: 'bet', who: c.who, amt: m.amt });
+        if (m.t === 'check') act({ t: 'check', who: c.who });
+        if (m.t === 'fold') act({ t: 'fold', who: c.who });
+      });
+      c.on('close', function(){ if (conns[c.who] === c) { conns[c.who] = null; connInfo(); } });
+      c.on('error', function(){});
+    });
+    hostPeer.on('disconnected', function(){ setTimeout(function(){ try { hostPeer.reconnect(); } catch (e) {} }, 1500); connInfo(); });
+    hostPeer.on('error', function(err){
+      if (err.type === 'unavailable-id') { // 예전 테이블 창이 아직 남아 있음 → 잠시 후 재시도
+        connInfo('같은 코드의 테이블이 이미 열려 있어요. 다른 창을 닫아 주세요 (재시도 ' + (++hostTries) + ')');
+        try { hostPeer.destroy(); } catch (e) {} setTimeout(hostOpen, 4000);
+      } else if (err.type === 'network' || err.type === 'server-error' || err.type === 'socket-error') {
+        connInfo('인터넷 연결을 확인해 주세요'); try { hostPeer.destroy(); } catch (e) {} setTimeout(hostOpen, 4000);
+      }
+    });
+  }
+  function connInfo(msg){
+    var e = $('t-conn'); e.innerHTML = '';
+    if (msg) { e.appendChild(el('div', null, msg)); return; }
+    NAMES.forEach(function(w){ var d = el('div'), dot = el('span', 'dot' + (conns[w] && conns[w].open ? ' on' : '')); d.appendChild(dot); d.appendChild(document.createTextNode(w + (conns[w] && conns[w].open ? ' 연결됨' : ' 대기'))); e.appendChild(d); });
+  }
+
+  function seatEl(w, isTop){
+    var box = $(isTop ? 'seat-top' : 'seat-bot'); box.className = 'seat ' + w + (isTop ? ' top' : ''); box.innerHTML = '';
+    var lr = el('div', 'lr'); lr.appendChild(el('div', 'nm jua', w)); lr.appendChild(el('div', 'sub', S.dealer === w ? '딜러 · 스몰 블라인드' : '빅 블라인드'));
+    if (S.dealer === w) box.appendChild(el('div', 'dbtn', 'D'));
+    box.appendChild(lr);
+    var st = el('div'); st.appendChild(el('div', 'stk jua', fmt(S.p[w].stack))); st.appendChild(el('div', 'sub', '보유 칩')); box.appendChild(st);
+    var bt = el('div', 'bet'); bt.appendChild(el('b', 'jua', S.p[w].street ? fmt(S.p[w].street) : '–')); bt.appendChild(el('div', 'sub', '이번 라운드 베팅')); box.appendChild(bt);
+    box.dataset.who = w;
+  }
+  function renderTable(ev){
+    var top = other(S.bottom), bot = S.bottom;
+    seatEl(top, true); seatEl(bot, false);
+    $('w-a').className = 'btn win ' + bot; $('w-a').textContent = bot + ' 승';
+    $('w-b').className = 'btn win ' + top; $('w-b').textContent = top + ' 승';
+    ['w-a', 'w-b', 'w-split'].forEach(function(id){ $(id).disabled = !S.pot; });
+    $('t-new').disabled = !!S.pot; $('t-undo').disabled = !HIST.length;
+    $('t-meta').textContent = (S.hand ? '핸드 #' + S.hand : '「새 핸드」를 눌러 시작') + ' · 블라인드 ' + (S.blinds ? S.sb + '/' + S.bb : '없음') + ' · 칩 합계 ' + fmt(S.p.Sean.stack + S.p.Sharon.stack + S.pot);
+    $('local-top').hidden = $('local-bot').hidden = !S.local;
+    if (S.local) { mountPlay($('local-top'), top, true); mountPlay($('local-bot'), bot, true); }
+    var potShow = function(){ $('t-pot').textContent = fmt(S.pot); var pp = $('t-pile'); pp.innerHTML = ''; if (S.pot) pp.appendChild(pileEl(S.pot, 16)); };
+    if (!ev) { potShow(); return; }
+    var seatOf = function(w){ return $(w === top ? 'seat-top' : 'seat-bot'); };
+    if (ev.type === 'bet') {
+      var prev = S.pot - ev.amt; $('t-pot').textContent = fmt(prev);
+      flyChips(ev.amt, center(seatOf(ev.who)), center($('t-pile')), { dur: 600, arc: 30, endScale: 0.85, done: function(){ potShow(); bump($('t-pot')); } });
+      banner(ev.who + (ev.allin ? ' 올인! ' : ' ') + fmt(ev.amt));
+    } else if (ev.type === 'new' && ev.blinds) {
+      potShow(); banner('핸드 #' + ev.hand + ' · 블라인드');
+      ev.blinds.forEach(function(x){ flyChips(x[1], center(seatOf(x[0])), center($('t-pile')), { dur: 500, arc: 20, max: 3 }); });
+    } else if (ev.type === 'win' || ev.type === 'split') {
+      var pile = $('t-pile'), from = center(pile), amt = ev.amt; $('t-pile').innerHTML = ''; $('t-pot').textContent = '0';
+      if (ev.type === 'win') flyChips(amt, from, center(seatOf(ev.who)), { dur: 750, arc: 40, max: 12, fade: true, done: potShow });
+      else { flyChips(amt / 2, from, center(seatOf(top)), { max: 6, fade: true }); flyChips(amt / 2, from, center(seatOf(bot)), { max: 6, fade: true, done: potShow }); }
+      banner(ev.type === 'win' ? (ev.fold ? ev.fold + ' 폴드 · ' : '') + ev.who + ' +' + fmt(amt) + ' 🎉' : '찹! 반반 🤝');
+    } else if (ev.type === 'check') { potShow(); banner(ev.who + ' 체크'); }
+    else if (ev.type === 'fold') { potShow(); banner(ev.who + ' 폴드'); }
+    else { potShow(); if (ev.type === 'street') banner('다음 카드 🂠'); if (ev.type === 'undo') banner('되돌림 ↩'); }
+  }
+  function bump(e){ e.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.15)' }, { transform: 'scale(1)' }], { duration: 300 }); }
+  var bt2; function banner(t){ var b = $('t-banner'); b.textContent = t; b.classList.add('on'); clearTimeout(bt2); bt2 = setTimeout(function(){ b.classList.remove('on'); }, 1400); }
+
+  $('w-a').addEventListener('click', function(){ act({ t: 'win', who: S.bottom }); });
+  $('w-b').addEventListener('click', function(){ act({ t: 'win', who: other(S.bottom) }); });
+  $('w-split').addEventListener('click', function(){ act({ t: 'split' }); });
+  $('t-street').addEventListener('click', function(){ act({ t: 'street' }); });
+  $('t-new').addEventListener('click', function(){ act({ t: 'new' }); });
+  $('t-undo').addEventListener('click', function(){ act({ t: 'undo' }); });
+  $('t-set').addEventListener('click', function(){
+    $('o-start').value = S.start; $('o-sb').value = S.sb; $('o-bb').value = S.bb; $('o-blind').checked = S.blinds; $('o-local').checked = S.local;
+    Array.prototype.forEach.call($('o-bot').querySelectorAll('button'), function(b){ b.classList.toggle('sel', b.dataset.w === S.bottom); });
+    $('sheet').hidden = false;
+  });
+  Array.prototype.forEach.call($('o-bot').querySelectorAll('button'), function(b){ b.addEventListener('click', function(){ Array.prototype.forEach.call($('o-bot').querySelectorAll('button'), function(x){ x.classList.toggle('sel', x === b); }); }); });
+  $('o-ok').addEventListener('click', function(){
+    var bsel = $('o-bot').querySelector('.sel');
+    act({ t: 'opts', o: { sb: Math.max(0, +$('o-sb').value || 0), bb: Math.max(0, +$('o-bb').value || 0), blinds: $('o-blind').checked, local: $('o-local').checked, bottom: bsel ? bsel.dataset.w : S.bottom, start: Math.max(10, +$('o-start').value || 1000) } });
+    $('sheet').hidden = true;
+  });
+  $('o-reset').addEventListener('click', function(){ var st = Math.max(10, +$('o-start').value || 1000); if (!confirm('두 사람 모두 ' + fmt(st) + '칩으로 다시 시작할까요? (되돌리기로 복구 가능)')) return; act({ t: 'reset', start: st }); $('sheet').hidden = true; });
+
+  // =====================================================
+  //  내 칩 화면 (휴대폰, 또는 태블릿 단독 모드의 받침)
+  // =====================================================
+  // 한 사람 분의 칩 받침·트레이·버튼. send(action) 으로 테이블에 전달
+  var PLAY = {};
+  function mountPlay(root, who, local){
+    var st = local ? pub() : PS; if (!st) return;
+    var key = who + (local ? 'L' : 'P'), P = PLAY[key] || (PLAY[key] = { sel: 0 });
+    var mine = st.p[who], opp = st.p[other(who)], toCall = Math.max(0, opp.street - mine.street);
+    if (P.sel > mine.stack) P.sel = 0;
+    var send = function(m){ if (local) act({ t: m.t, who: who, amt: m.amt }); else sendHost(m); };
+    root.innerHTML = '';
+    var tray = el('div', 'tray' + (P.sel ? ' ready' : ''));
+    var guide = el('div', 'guide'); guide.appendChild(el('i', null, P.sel ? '⬆' : '')); guide.appendChild(document.createTextNode(P.sel ? (local ? '가운데로 밀어서 베팅' : '위로 밀어 올려서 베팅') : '아래 칩을 눌러 담아요'));
+    tray.appendChild(guide);
+    var pw = el('div'); pw.style.minHeight = '40px'; if (P.sel) pw.appendChild(pileEl(P.sel, 10)); tray.appendChild(pw);
+    tray.appendChild(el('div', 'amt jua', P.sel ? fmt(P.sel) : ''));
+    var rack = el('div', 'rack');
+    DEN.forEach(function(d){
+      var b = el('button'); b.appendChild(chipEl(d)); b.disabled = P.sel + d > mine.stack;
+      b.addEventListener('click', function(){ P.sel += d; clack(1); buzz(8); mountPlay(root, who, local); });
+      rack.appendChild(b);
+    });
+    var q = el('div', 'quick');
+    var cc = el('button', 'btn', toCall ? '콜 ' + fmt(Math.min(toCall, mine.stack)) : '체크');
+    cc.addEventListener('click', function(){ if (toCall) { P.sel = Math.min(toCall, mine.stack); mountPlay(root, who, local); } else { send({ t: 'check' }); toastFor(local, '체크'); } });
+    var ai = el('button', 'btn', '올인'); ai.disabled = !mine.stack;
+    ai.addEventListener('click', function(){ P.sel = mine.stack; mountPlay(root, who, local); });
+    var clr = el('button', 'btn ghost', '비우기'); clr.disabled = !P.sel;
+    clr.addEventListener('click', function(){ P.sel = 0; mountPlay(root, who, local); });
+    var fd = el('button', 'btn ghost', '폴드'); fd.style.borderColor = '#FF9CB5'; fd.style.color = '#FFD1DC';
+    fd.addEventListener('click', function(){ if (!confirm('폴드할까요? 팟은 ' + other(who) + '에게 가요.')) return; P.sel = 0; send({ t: 'fold' }); });
+    q.appendChild(cc); q.appendChild(ai); q.appendChild(clr); q.appendChild(fd);
+    if (local) {
+      var mini = el('div', 'mini'), left = el('div'); left.appendChild(tray); mini.appendChild(left); var r2 = el('div'); r2.appendChild(rack); rack.style.gridTemplateColumns = 'repeat(2,1fr)'; mini.appendChild(r2);
+      root.appendChild(mini); root.appendChild(q);
+    } else { root.appendChild(tray); root.appendChild(rack); root.appendChild(q); }
+    // 스와이프: 위로(태블릿 위쪽 받침은 화면상 아래로 — 회전돼 있어서 같은 손동작)
+    var sy = null, sx = null, st0 = 0;
+    tray.addEventListener('pointerdown', function(e){ if (!P.sel) return; sy = e.clientY; sx = e.clientX; st0 = Date.now(); try { tray.setPointerCapture(e.pointerId); } catch (x) {} });
+    tray.addEventListener('pointermove', function(e){ if (sy == null) return; var dy = e.clientY - sy; if (root.classList.contains('top')) dy = -dy; pw.style.transform = 'translateY(' + Math.min(0, dy) + 'px) rotate(' + (Math.min(0, dy) / 12) + 'deg)'; });
+    var end = function(e){
+      if (sy == null) return; var dy = e.clientY - sy, dt = Date.now() - st0; if (root.classList.contains('top')) dy = -dy; sy = null;
+      if (dy < -80 || (dy < -45 && dt < 250)) { var amt = P.sel; P.sel = 0; tossUp(pw, amt, function(){ send({ t: 'bet', amt: amt }); }, local); buzz(20); }
+      else { pw.animate([{ transform: pw.style.transform }, { transform: 'none' }], { duration: 200 }); pw.style.transform = ''; }
+    };
+    tray.addEventListener('pointerup', end); tray.addEventListener('pointercancel', end);
+  }
+  function tossUp(pw, amt, cb, local){ // 칩 더미가 위로(태블릿에선 가운데 팟으로) 날아가며 넘어짐
+    var r = center(pw), up = local ? center($('t-pile')) : { x: r.x + (Math.random() * 40 - 20), y: r.y - 420 };
+    if (local) { pw.style.visibility = 'hidden'; setTimeout(cb, 0); return; }
+    pw.style.visibility = 'hidden';
+    flyChips(amt, r, up, { dur: 420, arc: 10, endScale: 0.6, fade: true, stagger: 30, max: 8 });
+    setTimeout(cb, 60);
+  }
+  function toastFor(local, t){ if (!local) toast(t); }
+
+  // ---------- 휴대폰 연결 ----------
+  var PS = null, cpeer = null, conn = null, retry = null;
+  function startPhone(){
+    role = 'player'; show('s-phone'); document.title = '칩 테이블 · ' + me;
+    $('p-me').textContent = me; $('p-me').className = 'me jua ' + me;
+    try { PS = JSON.parse(store('chip_phone_' + code) || 'null'); } catch (e) {}
+    phoneConnect();
+    try { navigator.wakeLock && navigator.wakeLock.request('screen').catch(function(){}); } catch (e) {}
+  }
+  function setConn(on, t){ $('p-conn').innerHTML = ''; $('p-conn').appendChild(el('span', 'dot' + (on ? ' on' : ''))); $('p-conn').appendChild(document.createTextNode(t)); }
+  function phoneConnect(){
+    if (typeof Peer === 'undefined') { setConn(false, '연결 불가'); return; }
+    if (!cpeer || cpeer.destroyed) {
+      cpeer = new Peer(PEER_OPTS);
+      cpeer.on('open', dial);
+      cpeer.on('disconnected', function(){ setTimeout(function(){ try { cpeer.reconnect(); } catch (e) {} }, 1500); });
+      cpeer.on('error', function(err){ if (err.type === 'peer-unavailable') { setConn(false, '테이블 대기 중'); schedule(); } else if (err.type === 'network' || err.type === 'server-error' || err.type === 'socket-error') { setConn(false, '인터넷 확인'); try { cpeer.destroy(); } catch (e) {} schedule(); } });
+    } else if (cpeer.open) dial();
+  }
+  function schedule(){ clearTimeout(retry); retry = setTimeout(phoneConnect, 2500); }
+  function dial(){
+    if (conn && conn.open) return;
+    setConn(false, '연결 중…');
+    conn = cpeer.connect(PREFIX + code + '-table', { reliable: true });
+    conn.on('open', function(){ conn.send({ t: 'hello', who: me }); setConn(true, '연결됨'); });
+    conn.on('data', onState);
+    conn.on('close', function(){ setConn(false, '끊김 · 다시 연결 중'); schedule(); });
+    conn.on('error', function(){ schedule(); });
+  }
+  function sendHost(m){ if (conn && conn.open) conn.send(m); else { toast('테이블과 연결이 끊겼어요'); phoneConnect(); } }
+  function onState(m){
+    if (!m || m.t !== 'state') return;
+    var prev = PS; PS = m.s; store('chip_phone_' + code, JSON.stringify(PS));
+    $('p-wait').hidden = true; $('p-main').hidden = false;
+    renderPhone();
+    var ev = m.ev || {};
+    if (ev.type === 'win' && ev.who === me) { rain(ev.amt); buzz([30, 40, 30]); toast((ev.fold ? ev.fold + ' 폴드 · ' : '') + '+' + fmt(ev.amt) + ' 획득! 🎉'); }
+    else if (ev.type === 'win') toast(ev.who + ' 승 · 팟 ' + fmt(ev.amt) + (ev.fold === me ? ' (폴드)' : ''));
+    else if (ev.type === 'split') { rain(ev.amt / 2); toast('찹! 반반 🤝'); }
+    else if (ev.type === 'bet' && ev.who !== me) { toast(ev.who + (ev.allin ? ' 올인 ' : ' 베팅 ') + fmt(ev.amt)); buzz(15); }
+    else if (ev.type === 'check' && ev.who !== me) toast(ev.who + ' 체크');
+    else if (ev.type === 'new') toast('핸드 #' + ev.hand + (ev.blinds ? ' · 블라인드' : ''));
+    else if (ev.type === 'street') toast('다음 카드 🂠');
+    else if (ev.type === 'undo') toast('테이블에서 되돌렸어요');
+    else if (ev.type === 'reset') toast('칩 초기화');
+  }
+  function rain(amt){ var s = center($('p-stack')); flyChips(amt, { x: s.x, y: -40 }, s, { dur: 700, arc: -30, max: 10, fade: true, endScale: 0.9 }); }
+  function renderPhone(){
+    var mine = PS.p[me], opp = PS.p[other(me)], toCall = Math.max(0, opp.street - mine.street);
+    $('p-stack').textContent = fmt(mine.stack);
+    $('p-opp').textContent = other(me) + ' ' + fmt(opp.stack) + '칩' + (PS.dealer === other(me) ? ' · D' : '');
+    $('p-oppbet').textContent = opp.street ? '베팅 ' + fmt(opp.street) : '';
+    $('p-pot').textContent = '팟 ' + fmt(PS.pot); $('p-call').textContent = toCall ? '콜 ' + fmt(toCall) : (PS.dealer === me ? '내가 딜러' : '체크 가능');
+    mountPlay($('p-play'), me, false);
+    $('p-play').style.display = 'flex'; $('p-play').style.flexDirection = 'column'; $('p-play').style.flex = '1';
+  }
+  document.addEventListener('visibilitychange', function(){ if (document.visibilityState === 'visible' && role === 'player' && !(conn && conn.open)) phoneConnect(); });
+
+  // 바로 열기: ?as=table / ?as=Sean  (모든 변수 초기화 뒤에 실행)
+  var AS = URLP.get('as');
+  if (AS && /^\d{4}$/.test(URLP.get('code') || code)) { code = URLP.get('code') || code; if (AS === 'table') startTable(); else if (NAMES.indexOf(AS) >= 0) { me = AS; startPhone(); } }
+
+  window.__CT = { S: function(){ return S; }, PS: function(){ return PS; }, act: act };
+})();
+</script>
+</body>
+</html>
