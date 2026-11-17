@@ -2,6 +2,7 @@
  * sean-sharon 참여형 콘텐츠 — 응답 수집용 Google Apps Script (콘텐츠 공용)
  *  1) 학원생 설문(학업·진로·AI)  https://imsean629.github.io/sean-sharon/survey/   → '설문응답' 탭
  *  2) 오늘의 밸런스 게임(커플)     https://imsean629.github.io/sean-sharon/balance/  → '밸런스' 탭
+ *  3) 오늘의 쇼다운(커플 포커)      https://imsean629.github.io/sean-sharon/poker/    → '포커' 탭 (제출한 판은 수정 불가)
  *     질문·벌칙은 '밸런스질문'·'밸런스벌칙' 탭에서 고치면 앱에 바로 반영됩니다(처음 접속 때 기본값으로 자동 생성).
  *     질문 순서 = 탭의 행 순서. 행을 추가/삭제하면 이후 날짜의 질문 배정이 바뀌니, 중간 삽입보다 끝에 추가를 권장합니다.
  *
@@ -31,6 +32,12 @@ const TABS = {
     cols: ['ts', 'sid', 'day', 'code', 'who', 'pick', 'memo'],
     text: { memo: 30 },
     asText: ['day', 'code'],                // 날짜·코드가 숫자/날짜로 바뀌지 않게 텍스트로 저장
+  },
+  poker: {
+    name: '포커',
+    cols: ['ts', 'sid', 'day', 'round', 'code', 'who', 'disc', 'bet'],
+    asText: ['day', 'code', 'disc'],
+    lock: true,                             // 한 번 낸 패·베팅은 덮어쓰지 않음
   },
 };
 const BAL_Q_TAB = '밸런스질문', BAL_P_TAB = '밸런스벌칙';
@@ -64,6 +71,13 @@ function valid_(kind, d) {
     if (['Sean', 'Sharon'].indexOf(d.who) < 0 || ['A', 'B'].indexOf(d.pick) < 0) return false;
     d.sid = [d.code, d.day, d.who].join('_');  // 한 사람이 하루 한 번 (다시 고르면 덮어쓰기)
   }
+  if (kind === 'poker') {
+    if (!/^\d{4}$/.test(String(d.code)) || !/^\d{4}-\d{2}-\d{2}$/.test(String(d.day))) return false;
+    if (['Sean', 'Sharon'].indexOf(d.who) < 0 || [1, 2, 3].indexOf(Number(d.round)) < 0) return false;
+    if ([0, 2, 5, 10].indexOf(Number(d.bet)) < 0 || !/^([0-4](,[0-4]){0,4})?$/.test(String(d.disc || ''))) return false;
+    d.round = Number(d.round); d.bet = Number(d.bet); d.disc = String(d.disc || '');
+    d.sid = [d.code, d.day, d.round, d.who].join('_');
+  }
   return true;
 }
 
@@ -86,7 +100,10 @@ function doPost(e) {
     if (last > 1) {
       const ids = sh.getRange(2, sidCol, last - 1, 1).getValues().map(r => String(r[0]));
       const i = ids.indexOf(String(d.sid));
-      if (i >= 0) { sh.getRange(i + 2, 1, 1, t.cols.length).setValues([row]); return ContentService.createTextOutput('updated'); }
+      if (i >= 0) {
+        if (t.lock) return ContentService.createTextOutput('locked');
+        sh.getRange(i + 2, 1, 1, t.cols.length).setValues([row]); return ContentService.createTextOutput('updated');
+      }
     }
     sh.appendRow(row);
     return ContentService.createTextOutput('ok');
@@ -101,6 +118,7 @@ function doGet(e) {
   const p = (e && e.parameter) || {};
   if (p.type === 'survey') return tally_('survey');
   if (p.type === 'balance') return balance_(String(p.code || ''));
+  if (p.type === 'poker') return poker_(String(p.code || ''));
   return json_({ ok: true });
 }
 
@@ -141,6 +159,20 @@ function balance_(code) {
     out.push({ day: fmt(r[at('day')]), who: String(r[at('who')]), pick: String(r[at('pick')]), memo: String(r[at('memo')]).replace(/^'/, '') });
   });
   return json_({ rows: out, questions: balTab_(ss, BAL_Q_TAB), penalties: balTab_(ss, BAL_P_TAB) });
+}
+
+// 쇼다운 포커: 커플 코드가 같은 판 기록 (카드는 앱이 날짜·판 번호로 똑같이 만들어 냄)
+function poker_(code) {
+  if (!/^\d{4}$/.test(code)) return json_({ error: 'code' });
+  const tz = 'Asia/Seoul', fmt = v => v instanceof Date ? Utilities.formatDate(v, tz, 'yyyy-MM-dd') : String(v).replace(/^'/, '');
+  const t = TABS.poker, sh = sheet_('poker'), last = sh.getLastRow(), at = c => t.cols.indexOf(c);
+  const rows = last > 1 ? sh.getRange(2, 1, last - 1, t.cols.length).getValues() : [], out = [];
+  rows.forEach(r => {
+    let c = fmt(r[at('code')]); if (/^\d+$/.test(c)) c = ('0000' + c).slice(-4);
+    if (c !== code) return;
+    out.push({ day: fmt(r[at('day')]), round: Number(r[at('round')]), who: String(r[at('who')]), disc: String(r[at('disc')]).replace(/^'/, ''), bet: Number(r[at('bet')]) });
+  });
+  return json_({ rows: out });
 }
 
 function balTab_(ss, name) {

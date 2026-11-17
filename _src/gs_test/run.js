@@ -31,3 +31,17 @@ chk(get({type:'balance',code:'12'}).error==='code','코드 형식 오류');
 chk(post({kind:'survey',sid:'x1',level:'중',grade:2,q1:'1~2시간',q9:'IT·AI|교육',q18:'=hi'})==='ok','설문 저장(회귀)');
 const s=get({type:'survey'}); chk(s.count===1 && s.by['중'].q9['교육']===1 && !JSON.stringify(s).includes('hi'),'설문 집계(회귀)');
 console.log(ok?'ALL OK':'SOME FAILED');
+// --- 포커
+ok=true;
+chk(post({kind:'poker',code:'0429',day:'2026-11-17',round:1,who:'Sean',disc:'0,3',bet:5})==='ok','포커 Sean 1판 저장');
+chk(post({kind:'poker',code:'0429',day:'2026-11-17',round:1,who:'Sean',disc:'',bet:10})==='locked','제출한 판은 수정 불가');
+chk(post({kind:'poker',code:'0429',day:'2026-11-17',round:1,who:'Sharon',disc:'',bet:0})==='ok','Sharon 폴드 저장');
+chk(post({kind:'poker',code:'0429',day:'2026-11-17',round:2,who:'Sharon',disc:'3',bet:2})==='ok','교체 1장 저장');
+chk(post({kind:'poker',code:'0429',day:'2026-11-17',round:4,who:'Sean',disc:'',bet:2})==='ignored','판 번호 검증');
+chk(post({kind:'poker',code:'0429',day:'2026-11-17',round:3,who:'Sean',disc:'',bet:7})==='ignored','베팅 금액 검증');
+chk(post({kind:'poker',code:'0429',day:'2026-11-17',round:3,who:'Sean',disc:'5',bet:2})==='ignored','교체 위치 검증');
+const pr=get({type:'poker',code:'0429'}).rows;
+chk(pr.length===3 && pr[0].disc==='0,3' && pr[0].bet===5 && pr[0].round===1 && pr[2].disc==='3', '포커 조회 '+JSON.stringify(pr));
+chk(get({type:'poker',code:'1111'}).rows.length===0,'다른 코드는 안 보임');
+chk(get({type:'balance',code:'0429'}).rows.length===2,'밸런스 회귀');
+console.log(ok?'POKER ALL OK':'POKER FAILED');

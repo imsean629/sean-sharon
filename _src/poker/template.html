@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>오늘의 쇼다운 — Sean ♥ Sharon 포커</title>
+<meta name="robots" content="noindex">
+<meta property="og:type" content="website">
+<meta property="og:title" content="오늘의 쇼다운 🃏">
+<meta property="og:description" content="하루 세 판, 바꾸고 걸고 까 보자. 이번 달 칩왕은 누구?">
+<meta property="og:url" content="__URL__">
+<meta property="og:image" content="__URL__og.png">
+<meta name="theme-color" content="#FFF7F2">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
+<style>
+:root{--bg:#FFF7F2;--ink:#3B3551;--sub:#7A7290;--line:#F0E2E8;--pinkD:#D9466B;--pinkL:#FFE3EA;--skyD:#2F6FC4;--skyL:#EAF4FF;--felt:#2E6B58;--feltD:#23574A;--gold:#F2CF5B}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:#FBEDE6;color:var(--ink);font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;-webkit-font-smoothing:antialiased;word-break:keep-all}
+button,input{font-family:inherit;color:inherit}
+[hidden]{display:none!important}
+.jua{font-family:'Jua','Noto Sans KR',sans-serif;font-weight:400}
+.app{max-width:480px;margin:0 auto;min-height:100vh;min-height:100dvh;background:var(--bg);position:relative;overflow:hidden;display:flex;flex-direction:column}
+.screen{display:none;flex:1;flex-direction:column;padding:20px 16px 26px;position:relative;z-index:1}
+.screen.on{display:flex}
+.primary{width:100%;min-height:54px;border:0;border-radius:16px;background:var(--pinkD);color:#FFFFFF;font-size:17px;font-weight:900;cursor:pointer;box-shadow:0 5px 0 #B5304F}
+.primary:active{transform:translateY(3px);box-shadow:0 2px 0 #B5304F}
+.primary[disabled]{background:#D8D0D6;box-shadow:0 5px 0 #C2B9C0;cursor:default}
+.ghost{width:100%;min-height:48px;border:2px solid #E7D6DE;border-radius:14px;background:#FFFFFF;font-size:15px;font-weight:700;cursor:pointer}
+.box{background:#FFFFFF;border-radius:22px;padding:18px;box-shadow:0 8px 24px rgba(217,70,107,.08)}
+
+/* 시작 */
+.hero-tag{display:inline-block;padding:6px 12px;border-radius:999px;background:#FFFFFF;font-size:13px;font-weight:700;color:var(--pinkD)}
+.hero-t{margin:14px 0 0;font-size:42px;line-height:1.15}
+.hero-t em{font-style:normal;color:var(--felt)}
+.hero-l{margin:10px 0 20px;font-size:15px;line-height:1.6;color:var(--sub)}
+.who{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.whob{min-height:72px;border:2px solid var(--line);border-radius:18px;background:#FFFFFF;font-size:20px;cursor:pointer}
+.whob.sel[data-w=Sean]{border-color:var(--skyD);background:var(--skyL);color:var(--skyD)}
+.whob.sel[data-w=Sharon]{border-color:var(--pinkD);background:var(--pinkL);color:var(--pinkD)}
+.lbl{margin:18px 0 8px;font-size:14px;font-weight:900}
+.code{width:100%;height:58px;border:2px solid var(--line);border-radius:16px;text-align:center;font-size:28px;letter-spacing:14px;font-weight:900;background:#FFFBFC}
+.code:focus{outline:none;border-color:var(--pinkD)}
+.small{margin-top:8px;font-size:12.5px;color:var(--sub);line-height:1.55}
+
+/* 상단 점수판 */
+.ttl{display:flex;align-items:center;justify-content:space-between}
+.ttl h1{margin:0;font-size:26px}
+.ttl span{font-size:12.5px;font-weight:900;color:var(--sub);background:#FFFFFF;padding:5px 10px;border-radius:999px}
+.board{margin-top:12px;display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:stretch}
+.pl{background:#FFFFFF;border-radius:18px;padding:10px 12px;text-align:center;position:relative;border:3px solid transparent}
+.pl.lead{border-color:var(--gold)}
+.pl .n{font-size:15px}
+.pl.Sean .n{color:var(--skyD)}.pl.Sharon .n{color:var(--pinkD)}
+.pl .c{font-size:28px;line-height:1.1;margin-top:2px}
+.pl .c small{font-size:13px;font-family:'Noto Sans KR',sans-serif;font-weight:700;color:var(--sub);margin-left:2px}
+.pl .crown{position:absolute;top:-14px;left:50%;transform:translateX(-50%);font-size:20px}
+.pl .tdy{font-size:11.5px;font-weight:700;color:var(--sub)}
+.vs{align-self:center;font-size:16px;color:var(--sub)}
+.tabs{margin-top:12px;display:grid;grid-template-columns:1fr 1fr;background:#F6E9EE;border-radius:14px;padding:4px}
+.tab{border:0;background:none;border-radius:11px;min-height:38px;font-size:15px;font-weight:900;color:var(--sub);cursor:pointer}
+.tab.on{background:#FFFFFF;color:var(--ink);box-shadow:0 2px 6px rgba(0,0,0,.06)}
+.pane{display:none;margin-top:12px}
+.pane.on{display:block}
+
+/* 판 선택 */
+.rounds{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.rd{border:2px solid var(--line);background:#FFFFFF;border-radius:14px;min-height:54px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
+.rd b{font-size:15px}
+.rd span{font-size:11.5px;font-weight:700;color:var(--sub)}
+.rd.on{border-color:var(--felt);background:#E8F4EF}
+.rd.win span{color:var(--skyD)}.rd.lose span{color:var(--pinkD)}
+
+/* 테이블 */
+.table{margin-top:12px;background:linear-gradient(165deg,#3A8069 0%,#2E6B58 55%,#23574A 100%);border-radius:26px;padding:14px 12px 16px;color:#FFFFFF;border:5px solid #24594A}
+.seat{display:flex;align-items:center;justify-content:space-between;font-size:13.5px;font-weight:900}
+.seat .sst{font-weight:700;opacity:.9;font-size:12.5px;text-align:right}
+.hand{margin-top:8px;display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.card{position:relative;aspect-ratio:5/7;border-radius:10px;background:#FFFFFF;color:#2B2B3A;box-shadow:0 3px 0 rgba(0,0,0,.18);display:flex;flex-direction:column;align-items:center;justify-content:center;border:0;padding:0;cursor:default;transition:transform .15s}
+.card .r{font-size:22px;font-weight:900;line-height:1}
+.card .s{font-size:22px;line-height:1.1}
+.card.red{color:#D23B4E}
+.card.back{background:repeating-linear-gradient(45deg,#FFB3C4 0 6px,#FFD6DF 6px 12px);border:3px solid #FFFFFF}
+.card.pick{cursor:pointer}
+.card.out{transform:translateY(-10px);opacity:.5}
+.card.out::after{content:'교체';position:absolute;bottom:-2px;left:50%;transform:translate(-50%,100%);font-size:11px;font-weight:900;color:var(--gold)}
+.card.new{animation:pop .35s}
+@keyframes pop{0%{transform:rotateY(90deg)}100%{transform:none}}
+.card.hl{border:3px solid var(--gold)}
+.mid{margin:14px 0;text-align:center}
+.mid .hn{font-size:24px;color:var(--gold)}
+.mid .hs{font-size:12.5px;opacity:.85;margin-top:2px}
+.pot{display:inline-block;margin-top:4px;padding:4px 12px;border-radius:999px;background:rgba(0,0,0,.2);font-size:12.5px;font-weight:700}
+.act{margin-top:14px}
+.act .hint{text-align:center;font-size:13px;font-weight:700;opacity:.9;margin-bottom:10px}
+.bets{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.bet{min-height:58px;border:0;border-radius:14px;background:rgba(255,255,255,.95);color:var(--ink);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:20px}
+.bet small{font-family:'Noto Sans KR',sans-serif;font-size:11px;font-weight:700;color:var(--sub)}
+.bet.fold{background:rgba(255,255,255,.55)}
+.bet.on{background:var(--gold);color:#3B2E00}
+.bet.on small{color:#5A4800}
+.goldbtn{margin-top:10px;width:100%;min-height:52px;border:0;border-radius:14px;background:var(--gold);color:#3B2E00;font-size:17px;font-weight:900;cursor:pointer;box-shadow:0 4px 0 #C9A73A}
+.goldbtn[disabled]{opacity:.5;cursor:default}
+.twin{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.wbtn{min-height:48px;border:2px solid rgba(255,255,255,.6);background:transparent;color:#FFFFFF;border-radius:14px;font-size:14.5px;font-weight:900;cursor:pointer}
+.lockmsg{text-align:center;font-size:14.5px;font-weight:900;margin:6px 0 12px}
+.lockmsg span{display:block;font-size:12.5px;font-weight:500;opacity:.85;margin-top:3px}
+.verdict{margin-top:6px;border-radius:18px;background:rgba(255,255,255,.95);color:var(--ink);text-align:center;padding:12px}
+.verdict h3{margin:0;font-size:26px}
+.verdict p{margin:4px 0 0;font-size:13px;font-weight:700;color:var(--sub)}
+.verdict.Sean h3{color:var(--skyD)}.verdict.Sharon h3{color:var(--pinkD)}
+.under{margin-top:12px;display:grid;gap:8px}
+.toast{min-height:18px;margin-top:8px;text-align:center;font-size:13px;font-weight:700;color:var(--pinkD)}
+.today{margin-top:12px;background:#FFFFFF;border-radius:16px;padding:12px 14px;font-size:14px;font-weight:700;text-align:center}
+.rules{margin-top:12px;background:#FFFFFF;border-radius:16px;padding:12px 14px;font-size:13px;line-height:1.65}
+.rules summary{font-weight:900;cursor:pointer;font-size:14px}
+.rules ol{margin:8px 0 0;padding-left:18px}
+
+/* 전적 */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.st{background:#FFFFFF;border-radius:16px;padding:12px 6px;text-align:center}
+.st b{display:block;font-size:20px}
+.st span{font-size:11.5px;font-weight:700;color:var(--sub)}
+.sec{margin:16px 0 8px;font-size:14px;font-weight:900}
+.best{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.best div{background:#FFFFFF;border-radius:14px;padding:10px 12px;font-size:13px;font-weight:700}
+.best div b{display:block;font-size:16px;margin-top:2px}
+.days{display:grid;gap:8px}
+.dy{background:#FFFFFF;border-radius:16px;padding:12px 14px}
+.dy .h{display:flex;justify-content:space-between;font-size:13px;font-weight:900}
+.dy .h span{font-weight:700;color:var(--sub)}
+.dy .r{margin-top:6px;display:grid;gap:3px;font-size:12.5px}
+.dy .r div{display:flex;gap:6px}
+.dy .r div b{min-width:34px}
+.empty{background:#FFFFFF;border-radius:16px;padding:14px;font-size:13px;color:var(--sub);text-align:center}
+.foot{margin-top:auto;padding-top:20px;text-align:center}
+.foot button{border:0;background:none;color:var(--sub);font-size:12.5px;text-decoration:underline;cursor:pointer}
+.status{margin-top:8px;text-align:center;font-size:12px;color:var(--sub)}
+</style>
+</head>
+<body>
+<div class="app">
+  <section class="screen" id="s-setup">
+    <span class="hero-tag">Sean ♥ Sharon 전용</span>
+    <h1 class="hero-t jua">오늘의<br><em>쇼다운</em> 🃏</h1>
+    <p class="hero-l">하루 세 판, 1:1 드로우 포커.<br>카드를 바꾸고, 걸고, 까 보자!</p>
+    <div class="box">
+      <div class="lbl" style="margin-top:0">나는</div>
+      <div class="who"><button class="whob jua" data-w="Sean">Sean</button><button class="whob jua" data-w="Sharon">Sharon</button></div>
+      <div class="lbl">우리 커플 코드 (숫자 4자리)</div>
+      <input class="code" id="code" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="····">
+      <p class="small">밸런스 게임과 같은 코드를 쓰면 돼요. 둘이 같은 숫자여야 같은 테이블에 앉아요.</p>
+    </div>
+    <div style="margin-top:auto;padding-top:18px"><button class="primary" id="btn-go" disabled>테이블에 앉기</button></div>
+  </section>
+
+  <section class="screen" id="s-main">
+    <div class="ttl"><h1 class="jua">오늘의 쇼다운 🃏</h1><span id="season"></span></div>
+    <div class="board">
+      <div class="pl Sean" id="pl-Sean"><div class="crown" hidden>👑</div><div class="n jua">Sean</div><div class="c jua"><span>100</span><small>칩</small></div><div class="tdy"></div></div>
+      <div class="vs jua">VS</div>
+      <div class="pl Sharon" id="pl-Sharon"><div class="crown" hidden>👑</div><div class="n jua">Sharon</div><div class="c jua"><span>100</span><small>칩</small></div><div class="tdy"></div></div>
+    </div>
+    <div class="tabs"><button class="tab on" data-p="play">오늘의 판</button><button class="tab" data-p="rec">전적</button></div>
+
+    <div class="pane on" id="p-play">
+      <div class="rounds" id="rounds"></div>
+      <div class="table" id="table">
+        <div class="seat"><span id="op-name"></span><span class="sst" id="op-st"></span></div>
+        <div class="hand" id="op-hand"></div>
+        <div class="mid" id="mid"></div>
+        <div class="hand" id="my-hand"></div>
+        <div class="seat" style="margin-top:8px"><span id="my-name"></span><span class="sst" id="my-st"></span></div>
+        <div class="act" id="act"></div>
+      </div>
+      <div class="under" id="under" hidden><button class="primary" id="btn-save">쇼다운 카드 저장</button></div>
+      <div class="toast" id="toast"></div>
+      <div class="today" id="today" hidden></div>
+      <details class="rules"><summary>규칙 보기</summary><ol>
+        <li>하루 세 판. 매일 자정(한국 시간)에 새 카드가 나와요.</li>
+        <li>5장을 받고, 바꾸고 싶은 카드를 골라 <b>딱 한 번</b> 교체해요(0~5장).</li>
+        <li>내 패를 보고 <b>폴드 / 2 / 5 / 10칩</b> 중 하나를 걸어요. 제출하면 되돌릴 수 없어요.</li>
+        <li>둘 다 내면 쇼다운! 참가비 1칩씩 걸려 있어요.<br>· 폴드하면 참가비 1칩만 잃어요.<br>· 둘 다 걸면 이긴 사람이 <b>1 + 두 사람 중 적게 건 칩</b>만큼 가져가요.</li>
+        <li>매달 1일에 둘 다 100칩으로 새 시즌 시작. 이달 칩이 많은 사람이 칩왕 👑</li>
+      </ol></details>
+    </div>
+
+    <div class="pane" id="p-rec">
+      <div class="sec" style="margin-top:0" id="rec-h"></div>
+      <div class="stats">
+        <div class="st"><b id="r-hands">0</b><span>쇼다운 판 수</span></div>
+        <div class="st"><b id="r-wins">0 : 0</b><span>Sean : Sharon 승</span></div>
+        <div class="st"><b id="r-days">0 : 0</b><span>일일 승리</span></div>
+      </div>
+      <div class="sec">이번 시즌 최고 족보</div>
+      <div class="best"><div>Sean<b id="b-Sean">–</b></div><div>Sharon<b id="b-Sharon">–</b></div></div>
+      <div class="sec">통산 (전체 시즌)</div>
+      <div class="stats">
+        <div class="st"><b id="a-Sean">0</b><span>Sean 누적 칩 ±</span></div>
+        <div class="st"><b id="a-Sharon">0</b><span>Sharon 누적 칩 ±</span></div>
+        <div class="st"><b id="a-seasons">0 : 0</b><span>시즌 칩왕</span></div>
+      </div>
+      <div class="sec">날짜별 기록</div>
+      <div class="days" id="days"></div>
+    </div>
+
+    <div class="status" id="status"></div>
+    <div class="foot"><button id="btn-reset">이름·코드 바꾸기</button></div>
+  </section>
+</div>
+
+<script>/*__H2C__*/</script>
+<script>/*__ENGINE__*/</script>
+<script>
+(function(){
+  var CONFIG = { SHEET_URL: "", SHARE_URL: "__URL__" };
+  var $ = function(id){ return document.getElementById(id); };
+  function el(t, c, x){ var e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; }
+  function store(k, v){ try { if (v === undefined) return localStorage.getItem(k); if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) { return null; } }
+  function show(id){ ['s-setup', 's-main'].forEach(function(s){ $(s).classList.toggle('on', s === id); }); window.scrollTo(0, 0); }
+  function kstToday(){ return new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10); }
+  function dn(s){ var p = s.split('-'); return Date.UTC(+p[0], +p[1] - 1, +p[2]) / 864e5; }
+  function ds(n){ return new Date(n * 864e5).toISOString().slice(0, 10); }
+  var WK = ['일', '월', '화', '수', '목', '금', '토'];
+  function pretty(s){ var d = new Date(dn(s) * 864e5); return (d.getUTCMonth() + 1) + '월 ' + d.getUTCDate() + '일 (' + WK[d.getUTCDay()] + ')'; }
+  var RL = { 11: 'J', 12: 'Q', 13: 'K', 14: 'A' }, SU = ['♠', '♥', '♦', '♣'];
+  function rl(r){ return RL[r] || String(r); }
+
+  // 밸런스 게임과 같은 이름·코드 저장소 사용 (같은 사이트라 한 번만 입력)
+  var ME = store('bal_me'), CODE = store('bal_code'), OTHER = null, ROWS = [], ROUND = 1, stage = null, disc = [], bet = null;
+
+  // ---------- 시작 ----------
+  var wsel = null;
+  Array.prototype.forEach.call(document.querySelectorAll('.whob'), function(b){
+    b.addEventListener('click', function(){ wsel = b.dataset.w; Array.prototype.forEach.call(document.querySelectorAll('.whob'), function(x){ x.classList.toggle('sel', x === b); }); chkGo(); });
+  });
+  $('code').addEventListener('input', function(){ this.value = this.value.replace(/\D/g, '').slice(0, 4); chkGo(); });
+  function chkGo(){ $('btn-go').disabled = !(wsel && /^\d{4}$/.test($('code').value)); }
+  $('btn-go').addEventListener('click', function(){ ME = wsel; CODE = $('code').value; store('bal_me', ME); store('bal_code', CODE); store('pk_cache', null); enter(); });
+  $('btn-reset').addEventListener('click', function(){ if (!confirm('이 휴대폰에서 이름·코드를 다시 고를까요? (기록은 그대로예요)')) return; store('bal_me', null); store('bal_code', null); store('pk_cache', null); location.reload(); });
+
+  // ---------- 데이터 ----------
+  function rowOf(day, round, who){ for (var i = 0; i < ROWS.length; i++) { var r = ROWS[i]; if (r.day === day && Number(r.round) === round && r.who === who) return r; } return null; }
+  function handOf(day, round, who){ var r = rowOf(day, round, who); return r ? PK.final(CODE, day, round, who, r.disc) : null; }
+  function outcome(day, round){ // Sean 기준 칩 증감
+    var a = rowOf(day, round, 'Sean'), b = rowOf(day, round, 'Sharon'); if (!a || !b) return null;
+    var ha = handOf(day, round, 'Sean'), hb = handOf(day, round, 'Sharon');
+    var ea = PK.evaluate(ha), eb = PK.evaluate(hb), s = PK.settle({ bet: Number(a.bet), ev: ea }, { bet: Number(b.bet), ev: eb });
+    return { d: s.d, how: s.how, amt: s.amt, a: a, b: b, ha: ha, hb: hb, ea: ea, eb: eb };
+  }
+  function dmine(o){ return ME === 'Sean' ? o.d : -o.d; }
+  function draftKey(day, round){ return 'pk_d_' + CODE + '_' + day + '_' + round + '_' + ME; }
+  function saveCache(){ store('pk_cache', JSON.stringify({ code: CODE, rows: ROWS })); }
+  try { var c = JSON.parse(store('pk_cache') || 'null'); if (c && c.code === CODE) ROWS = c.rows || []; } catch (e) {}
+
+  // ---------- 진입 ----------
+  function enter(){
+    OTHER = ME === 'Sean' ? 'Sharon' : 'Sean';
+    show('s-main');
+    var t = kstToday();
+    ROUND = 1; for (var r = 1; r <= 3; r++) { if (!rowOf(t, r, ME)) { ROUND = r; break; } if (r === 3) ROUND = 3; }
+    renderAll(); load();
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.tab'), function(t){
+    t.addEventListener('click', function(){
+      Array.prototype.forEach.call(document.querySelectorAll('.tab'), function(x){ x.classList.toggle('on', x === t); });
+      $('p-play').classList.toggle('on', t.dataset.p === 'play'); $('p-rec').classList.toggle('on', t.dataset.p === 'rec');
+      if (t.dataset.p === 'rec') renderRec();
+    });
+  });
+
+  // ---------- 점수판 ----------
+  function season(day){ return day.slice(0, 7); }
+  function seasonNet(mon){ var net = 0, seen = {}; ROWS.forEach(function(r){ if (season(r.day) !== mon) return; var k = r.day + '|' + r.round; if (seen[k]) return; seen[k] = 1; var o = outcome(r.day, Number(r.round)); if (o) net += o.d; }); return net; }
+  function dayNet(day){ var n = 0, any = false; for (var r = 1; r <= 3; r++) { var o = outcome(day, r); if (o) { n += o.d; any = true; } } return any ? n : null; }
+  function renderBoard(){
+    var t = kstToday(), mon = season(t), net = seasonNet(mon), chips = { Sean: 100 + net, Sharon: 100 - net }, tn = dayNet(t);
+    $('season').textContent = (+mon.slice(5)) + '월 시즌';
+    ['Sean', 'Sharon'].forEach(function(w){
+      var p = $('pl-' + w); p.querySelector('.c span').textContent = chips[w];
+      var lead = chips[w] > chips[w === 'Sean' ? 'Sharon' : 'Sean'];
+      p.classList.toggle('lead', lead); p.querySelector('.crown').hidden = !lead;
+      var d = tn == null ? null : (w === 'Sean' ? tn : -tn);
+      p.querySelector('.tdy').textContent = d == null ? '오늘 ±0' : '오늘 ' + (d > 0 ? '+' : '') + d;
+    });
+  }
+
+  // ---------- 판 ----------
+  function rstate(day, r){
+    var m = rowOf(day, r, ME), o = rowOf(day, r, OTHER);
+    if (!m) return 'play'; if (!o) return 'wait'; return 'show';
+  }
+  function renderRounds(){
+    var t = kstToday(), box = $('rounds'); box.innerHTML = '';
+    for (var r = 1; r <= 3; r++) (function(r){
+      var st = rstate(t, r), b = el('button', 'rd' + (r === ROUND ? ' on' : '')), lab = '';
+      if (st === 'play') lab = rowOf(t, r, OTHER) ? '상대 대기 중!' : '내 차례';
+      else if (st === 'wait') lab = '⏳ 상대 차례';
+      else { var d = dmine(outcome(t, r)); lab = d > 0 ? '승 +' + d : d < 0 ? '패 ' + d : '무승부'; b.classList.add(d > 0 ? 'win' : d < 0 ? 'lose' : 'tie'); }
+      b.appendChild(el('b', 'jua', r + '판')); b.appendChild(el('span', null, lab));
+      b.addEventListener('click', function(){ ROUND = r; disc = []; bet = null; renderTable(); renderRounds(); $('under').hidden = rstate(t, r) !== 'show'; });
+      box.appendChild(b);
+    })(r);
+  }
+  function cardEl(c, cls){
+    var e = el('button', 'card' + (c.s === 1 || c.s === 2 ? ' red' : '') + (cls ? ' ' + cls : '')); e.type = 'button';
+    e.appendChild(el('span', 'r', rl(c.r))); e.appendChild(el('span', 's', SU[c.s])); return e;
+  }
+  function backs(n){ var f = document.createDocumentFragment(); for (var i = 0; i < n; i++) f.appendChild(el('div', 'card back')); return f; }
+  function hl(cards, ev){ // 족보에 쓰인 카드 강조
+    if (ev.cat === 0) return cards.map(function(c){ return c.r === ev.score[1]; });
+    if ([4, 5, 6, 8].indexOf(ev.cat) >= 0) return cards.map(function(){ return true; });
+    var cnt = {}; cards.forEach(function(c){ cnt[c.r] = (cnt[c.r] || 0) + 1; });
+    return cards.map(function(c){ return cnt[c.r] >= 2; });
+  }
+  function renderTable(){
+    var t = kstToday(), r = ROUND, st = rstate(t, r), my = rowOf(t, r, ME), op = rowOf(t, r, OTHER);
+    var dealt = PK.dealt(CODE, t, r, ME), draft = store(draftKey(t, r));
+    $('op-name').textContent = OTHER; $('my-name').textContent = ME + ' (나)';
+    var oh = $('op-hand'), mh = $('my-hand'), mid = $('mid'), act = $('act');
+    oh.innerHTML = ''; mh.innerHTML = ''; mid.innerHTML = ''; act.innerHTML = '';
+    $('under').hidden = st !== 'show';
+    if (st === 'show') {
+      var o = outcome(t, r), mine = ME === 'Sean' ? { h: o.ha, e: o.ea, row: o.a } : { h: o.hb, e: o.eb, row: o.b }, his = ME === 'Sean' ? { h: o.hb, e: o.eb, row: o.b } : { h: o.ha, e: o.ea, row: o.a };
+      var hm = hl(mine.h, mine.e), hh = hl(his.h, his.e);
+      his.h.forEach(function(c, i){ oh.appendChild(cardEl(c, (hh[i] && his.row.bet ? 'hl ' : '') + 'new')); });
+      mine.h.forEach(function(c, i){ mh.appendChild(cardEl(c, hm[i] && mine.row.bet ? 'hl' : '')); });
+      $('op-st').textContent = (his.row.bet ? his.e.name + ' · ' + his.row.bet + '칩' : '폴드') + ' · ' + nDisc(his.row.disc);
+      $('my-st').textContent = (mine.row.bet ? mine.e.name + ' · ' + mine.row.bet + '칩' : '폴드') + ' · ' + nDisc(mine.row.disc);
+      var d = dmine(o), win = d > 0 ? ME : d < 0 ? OTHER : null, v = el('div', 'verdict' + (win ? ' ' + win : ''));
+      v.appendChild(el('h3', 'jua', win ? win + ' 승! ' + (d > 0 ? '🎉' : '😤') : (o.how === '둘 다 폴드' ? '둘 다 폴드 🙈' : '무승부 🤝')));
+      var why = o.how === 'fold-a' || o.how === 'fold-b' ? (o.how === 'fold-a' ? 'Sean' : 'Sharon') + ' 폴드 → 참가비 1칩 이동'
+              : o.how === 'show' ? (win === 'Sean' ? o.ea.name : o.eb.name) + ' 승 · ' + o.amt + '칩 이동 (참가비 1 + 작은 베팅 ' + (o.amt - 1) + ')' : o.how === 'tie' ? '족보·키커까지 같아서 칩 이동 없음' : '칩 이동 없음';
+      v.appendChild(el('p', null, why)); act.appendChild(v);
+      return;
+    }
+    oh.appendChild(backs(5));
+    $('op-st').textContent = op ? '✓ 제출 완료 (비공개)' : '고민 중…';
+    if (st === 'wait') {
+      PK.final(CODE, t, r, ME, my.disc).forEach(function(c){ mh.appendChild(cardEl(c)); });
+      var ev = PK.evaluate(PK.final(CODE, t, r, ME, my.disc));
+      mid.appendChild(el('div', 'hn jua', ev.name)); mid.appendChild(el('div', 'pot', my.bet ? my.bet + '칩 걸었음' : '폴드함'));
+      $('my-st').textContent = '제출 완료 · ' + nDisc(my.disc);
+      var lm = el('div', 'lockmsg'); lm.textContent = '🔒 ' + OTHER + '의 차례'; lm.appendChild(el('span', null, OTHER + '이 내면 바로 쇼다운!'));
+      act.appendChild(lm);
+      var tw = el('div', 'twin'), nb = el('button', 'wbtn', '카톡으로 재촉하기'), nx = el('button', 'wbtn', r < 3 ? '다음 판 하기 ›' : '새로고침');
+      nb.addEventListener('click', nudge);
+      nx.addEventListener('click', function(){ if (r < 3) { ROUND = r + 1; disc = []; bet = null; renderRounds(); renderTable(); } else load(); });
+      tw.appendChild(nb); tw.appendChild(nx); act.appendChild(tw);
+      return;
+    }
+    // 내 차례: 교체 → 베팅
+    if (draft == null) {
+      stage = 'draw';
+      dealt.init.forEach(function(c, i){
+        var e = cardEl(c, 'pick' + (disc.indexOf(i) >= 0 ? ' out' : ''));
+        e.addEventListener('click', function(){ var k = disc.indexOf(i); if (k >= 0) disc.splice(k, 1); else disc.push(i); renderTable(); });
+        mh.appendChild(e);
+      });
+      var ev0 = PK.evaluate(dealt.init);
+      mid.appendChild(el('div', 'hn jua', ev0.name)); mid.appendChild(el('div', 'hs', '지금 패'));
+      $('my-st').textContent = '교체는 한 번만!';
+      var h = el('div', 'hint', '바꿀 카드를 눌러요 (0~5장)'); act.appendChild(h);
+      var b = el('button', 'goldbtn', disc.length ? disc.length + '장 교체하기' : '그대로 간다 (교체 없음)');
+      b.addEventListener('click', function(){
+        if (disc.length === 5 && !confirm('5장을 모두 바꿀까요?')) return;
+        store(draftKey(t, r), disc.slice().sort().join(',')); renderTable();
+      });
+      act.appendChild(b);
+      return;
+    }
+    stage = 'bet';
+    var fin = PK.final(CODE, t, r, ME, draft), ds2 = PK.parseDisc(draft), ev = PK.evaluate(fin);
+    fin.forEach(function(c, i){ mh.appendChild(cardEl(c, ds2.indexOf(i) >= 0 ? 'new' : '')); });
+    mid.appendChild(el('div', 'hn jua', ev.name)); mid.appendChild(el('div', 'hs', nDisc(draft)));
+    $('my-st').textContent = '얼마나 걸까?';
+    act.appendChild(el('div', 'hint', '참가비 1칩 포함 · 제출하면 되돌릴 수 없어요'));
+    var bs = el('div', 'bets');
+    [[0, '폴드', '-1칩'], [2, '2', '칩'], [5, '5', '칩'], [10, '10', '올인급']].forEach(function(x){
+      var e = el('button', 'bet jua' + (x[0] === 0 ? ' fold' : '') + (bet === x[0] ? ' on' : '')); e.appendChild(document.createTextNode(x[1])); e.appendChild(el('small', null, x[2]));
+      e.addEventListener('click', function(){ bet = x[0]; renderTable(); });
+      bs.appendChild(e);
+    });
+    act.appendChild(bs);
+    var go = el('button', 'goldbtn', bet == null ? '베팅을 골라요' : bet ? bet + '칩 걸고 제출' : '폴드하고 제출'); go.disabled = bet == null;
+    go.addEventListener('click', function(){ submit(t, r, draft, bet); });
+    act.appendChild(go);
+  }
+  function nDisc(s){ var n = PK.parseDisc(s).length; return n ? n + '장 교체' : '교체 없음'; }
+
+  // ---------- 제출 ----------
+  function submit(day, r, d, b){
+    var row = { day: day, round: r, who: ME, disc: d, bet: b };
+    ROWS.push(row); saveCache(); store(draftKey(day, r), null); bet = null; disc = [];
+    renderAll();
+    if (!CONFIG.SHEET_URL) { $('status').textContent = '(미리보기) 저장이 아직 연결되지 않았어요.'; return; }
+    $('status').textContent = '제출하는 중…';
+    fetch(CONFIG.SHEET_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ kind: 'poker', code: CODE, day: day, round: r, who: ME, disc: d, bet: b }) })
+      .then(function(){ $('status').textContent = '제출 완료 ✓'; setTimeout(load, 1500); })
+      .catch(function(){ $('status').textContent = '제출하지 못했어요. 인터넷 연결을 확인해 주세요.'; });
+  }
+
+  // ---------- 불러오기 ----------
+  var loading = false;
+  function load(){
+    if (!CONFIG.SHEET_URL || loading) return;
+    loading = true;
+    fetch(CONFIG.SHEET_URL + '?type=poker&code=' + CODE + '&t=' + Date.now()).then(function(r){ return r.json(); }).then(function(d){
+      if (d.rows) {
+        // 서버에 아직 반영 안 된 내 제출은 유지
+        var pend = ROWS.filter(function(x){ return x.who === ME && !d.rows.some(function(y){ return y.day === x.day && Number(y.round) === Number(x.round) && y.who === x.who; }); });
+        ROWS = d.rows.concat(pend); saveCache();
+      }
+      $('status').textContent = ''; if (stage !== 'bet' || rstate(kstToday(), ROUND) !== 'play') renderAll(); else { renderBoard(); renderRounds(); }
+    }).catch(function(){ $('status').textContent = '기록을 불러오지 못했어요. 잠시 후 다시 시도할게요.'; }).then(function(){ loading = false; });
+  }
+  setInterval(function(){
+    if (document.visibilityState !== 'visible' || !$('s-main').classList.contains('on')) return;
+    var t = kstToday(), need = false; for (var r = 1; r <= 3; r++) if (rowOf(t, r, ME) && !rowOf(t, r, OTHER)) need = true;
+    if (need) load();
+  }, 12000);
+  document.addEventListener('visibilitychange', function(){ if (document.visibilityState === 'visible' && $('s-main').classList.contains('on')) load(); });
+
+  function renderToday(){
+    var t = kstToday(), n = dayNet(t), done = 0; for (var r = 1; r <= 3; r++) if (outcome(t, r)) done++;
+    $('today').hidden = !done;
+    if (done) $('today').textContent = done === 3 ? '오늘의 승자: ' + (n > 0 ? 'Sean 👑 (+' + n + ')' : n < 0 ? 'Sharon 👑 (+' + (-n) + ')' : '무승부 🤝') : '오늘 ' + done + '판 끝 · ' + (n > 0 ? 'Sean +' + n : n < 0 ? 'Sharon +' + (-n) : '동점');
+  }
+  function renderAll(){ renderBoard(); renderRounds(); renderTable(); renderToday(); if ($('p-rec').classList.contains('on')) renderRec(); }
+
+  // ---------- 전적 ----------
+  function renderRec(){
+    var t = kstToday(), mon = season(t), wins = { Sean: 0, Sharon: 0 }, dwins = { Sean: 0, Sharon: 0 }, hands = 0, best = { Sean: null, Sharon: null };
+    var all = { net: 0 }, seasons = {}, list = $('days'); list.innerHTML = '';
+    var daysSet = {}; ROWS.forEach(function(r){ daysSet[r.day] = 1; });
+    Object.keys(daysSet).sort().reverse().forEach(function(day){
+      var dnet = 0, any = false, box = el('div', 'dy'), rr = el('div', 'r');
+      for (var r = 1; r <= 3; r++) {
+        var o = outcome(day, r); if (!o) { if (rowOf(day, r, 'Sean') || rowOf(day, r, 'Sharon')) { var w = el('div'); w.appendChild(el('b', null, r + '판')); w.appendChild(document.createTextNode('한 명만 제출 (' + (rowOf(day, r, 'Sean') ? 'Sharon' : 'Sean') + ' 미제출)')); rr.appendChild(w); } continue; }
+        any = true; dnet += o.d; all.net += o.d; seasons[season(day)] = (seasons[season(day)] || 0) + o.d;
+        if (season(day) === mon) {
+          hands++; if (o.d > 0) wins.Sean++; if (o.d < 0) wins.Sharon++;
+          [['Sean', o.ea, o.a], ['Sharon', o.eb, o.b]].forEach(function(x){ if (x[2].bet && (!best[x[0]] || PK.cmp(x[1].score, best[x[0]].score) > 0)) best[x[0]] = x[1]; });
+        }
+        var line = el('div'); line.appendChild(el('b', null, r + '판'));
+        line.appendChild(document.createTextNode('Sean ' + (o.a.bet ? o.ea.name + '·' + o.a.bet + '칩' : '폴드') + ' vs Sharon ' + (o.b.bet ? o.eb.name + '·' + o.b.bet + '칩' : '폴드') + ' → ' + (o.d > 0 ? 'Sean +' + o.d : o.d < 0 ? 'Sharon +' + (-o.d) : '무')));
+        rr.appendChild(line);
+      }
+      if (any && season(day) === mon) { if (dnet > 0) dwins.Sean++; if (dnet < 0) dwins.Sharon++; }
+      var h = el('div', 'h'); h.appendChild(document.createTextNode(pretty(day))); h.appendChild(el('span', null, any ? (dnet > 0 ? 'Sean +' + dnet : dnet < 0 ? 'Sharon +' + (-dnet) : '무승부') : '진행 중'));
+      box.appendChild(h); box.appendChild(rr); list.appendChild(box);
+    });
+    if (!list.children.length) list.appendChild(el('div', 'empty', '아직 기록이 없어요. 첫 판을 시작해 보세요!'));
+    $('rec-h').textContent = (+mon.slice(5)) + '월 시즌';
+    $('r-hands').textContent = hands; $('r-wins').textContent = wins.Sean + ' : ' + wins.Sharon; $('r-days').textContent = dwins.Sean + ' : ' + dwins.Sharon;
+    $('b-Sean').textContent = best.Sean ? best.Sean.name : '–'; $('b-Sharon').textContent = best.Sharon ? best.Sharon.name : '–';
+    function sg(n){ return (n > 0 ? '+' : '') + n; }
+    $('a-Sean').textContent = sg(all.net); $('a-Sharon').textContent = sg(-all.net);
+    var sw = { Sean: 0, Sharon: 0 }; Object.keys(seasons).forEach(function(m){ if (m < mon) { if (seasons[m] > 0) sw.Sean++; if (seasons[m] < 0) sw.Sharon++; } });
+    $('a-seasons').textContent = sw.Sean + ' : ' + sw.Sharon;
+  }
+
+  // ---------- 재촉·저장 ----------
+  function toast(t){ $('toast').textContent = t; setTimeout(function(){ if ($('toast').textContent === t) $('toast').textContent = ''; }, 3500); }
+  function nudge(){
+    var text = ME + ' 오늘의 쇼다운 ' + ROUND + '판 냈다. 덤벼 🃏';
+    if (navigator.share) return navigator.share({ title: '오늘의 쇼다운', text: text, url: CONFIG.SHARE_URL }).catch(function(){});
+    if (navigator.clipboard) navigator.clipboard.writeText(text + ' ' + CONFIG.SHARE_URL).then(function(){ toast('복사했어요. 카톡에 붙여넣어 보내요!'); }, function(){ toast(CONFIG.SHARE_URL); });
+    else toast(CONFIG.SHARE_URL);
+  }
+  var isIOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  $('btn-save').addEventListener('click', function(){
+    var btn = this, lbl = btn.textContent; btn.disabled = true; btn.textContent = '카드 만드는 중…';
+    window.html2canvas($('table'), { scale: 3, backgroundColor: null, logging: false }).then(function(cv){ return new Promise(function(res){ cv.toBlob(res, 'image/png'); }); }).then(function(blob){
+      var name = '쇼다운_' + kstToday() + '_' + ROUND + '판.png', file = null; try { file = new File([blob], name, { type: 'image/png' }); } catch (e) {}
+      if (isIOS && file && navigator.canShare && navigator.canShare({ files: [file] })) return navigator.share({ files: [file] }).catch(function(){});
+      var u = URL.createObjectURL(blob), a = document.createElement('a'); a.href = u; a.download = name; document.body.appendChild(a); a.click(); a.remove(); toast('쇼다운 카드를 저장했어요!');
+    }).catch(function(){ toast('이미지를 만들지 못했어요. 화면을 캡처해 주세요.'); }).then(function(){ btn.disabled = false; btn.textContent = lbl; });
+  });
+
+  if (ME && /^\d{4}$/.test(CODE || '')) enter(); else show('s-setup');
+})();
+</script>
+</body>
+</html>
