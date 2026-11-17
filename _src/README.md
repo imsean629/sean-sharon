@@ -5,7 +5,9 @@
 | 폴더 | 콘텐츠 | 주소 |
 |---|---|---|
 | survey | 학원생 설문(학업·진로·AI), 초/중/고 분기 | /survey/ · 집계판 /survey/#board |
+| balance | 오늘의 밸런스 게임 (Sean ♥ Sharon 전용, 커플 코드) | /balance/ (시작 페이지에 링크 안 함, noindex) |
 | apps_script_Code.gs | 모든 콘텐츠 공용 Apps Script (kind별 탭) | |
+| gs_test/run.js | 가짜 Sheets로 Apps Script 검증 (`node run.js`) | |
 
 각 콘텐츠 = `data.py`(문항·문구) + `template.html`(단일 파일 앱) + `build.py`(데이터·QR·html2canvas·SHEET_URL 주입 → out/index.html, out/index_mock.html) + `test.py`(Playwright, 가짜 시트 https://mock.sheet.test/**) + `poster.py`(A3 QR 포스터 PDF, og.png, QR 해독 확인).
 
@@ -25,3 +27,9 @@ cd /home/claude/work/survey && python3 build.py "<웹앱 URL>" && python3 test.p
 - 새 콘텐츠 = TABS에 추가 → Apps Script **배포 관리 → 새 버전**(URL 유지). 기존 탭에 열을 추가하면 탭을 지우고 다시 만들게 함.
 - 대형 화면: 주소 뒤 `#board`.
 - A3 포스터: 1123×1587px HTML → PDF 297×420mm, QR은 segno error='q'.
+
+## 밸런스 게임 메모
+- 날짜별 질문 = (그날 − LAUNCH 2026-11-17) % 질문 수. 사귄 날 START 2026-09-05 → D+일수.
+- 벌칙·당첨자는 날짜+코드 해시로 두 휴대폰에서 같게 결정.
+- 질문·벌칙: 구글 시트 '밸런스질문'·'밸런스벌칙' 탭(첫 조회 때 자동 생성)이 앱 기본값보다 우선. 행 순서 = 질문 순서.
+- 기록: '밸런스' 탭 (day, code는 텍스트로 저장, sid = code_day_who 로 덮어쓰기).
