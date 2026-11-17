@@ -5,7 +5,7 @@ from data import LEVELS, QS, TITLES, BOARD
 
 H = os.path.dirname(os.path.abspath(__file__))
 URL = "https://imsean629.github.io/sean-sharon/survey/"
-SHEET = sys.argv[1] if len(sys.argv) > 1 else ""
+SHEET = sys.argv[1] if len(sys.argv) > 1 else "https://script.google.com/macros/s/AKfycbzltb6Q5-GcsaCb3hSEgw5hcKCVM-_ZSkF-amQV4ZZxCxOp7qn8P6FomEzV5KfQ2H6kog/exec"
 DARK = "#3B3551"
 
 os.makedirs(f"{H}/out", exist_ok=True)
